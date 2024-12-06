@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { v4 as uuid } from 'uuid';
-import { Activity } from "../layout/models/activity";
+import { Activity } from "../../models/activity";
 import { format } from "date-fns";
 
 export default class ActivityStore {

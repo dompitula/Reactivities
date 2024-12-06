@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, Header, Segment } from "semantic-ui-react";
 import { useStore } from '../../../app/stores/store';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Activity } from '../../../app/layout/models/activity';
+import { Activity } from '../../../models/activity';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
