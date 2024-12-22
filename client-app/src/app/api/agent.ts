@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { Activity } from '../../models/activity'
+import { Activity, ActivityFormValues } from '../../models/activity'
 import { toast } from 'react-toastify'
 import { router } from '../router/Routes'
 import { store } from '../stores/store'
@@ -21,7 +21,7 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(async response => {
     await sleep(500)
-    return response;
+    return response
 }, (error: AxiosError) => {
     const { data, status, config } = error.response as AxiosResponse
     switch (status) {
@@ -38,24 +38,24 @@ axios.interceptors.response.use(async response => {
                 }
                 throw modalStateErrors.flat()
             } else {
-                toast.error(data);
+                toast.error(data)
             }
-            break;
+            break
         case 401:
             toast.error('unauthorized')
-            break;
+            break
         case 403:
             toast.error('forbidden')
-            break;
+            break
         case 404:
             router.navigate('/not-found')
-            break;
+            break
         case 500:
             store.commonStore.setServerError(data)
             router.navigate('/server-error')
-            break;
+            break
         default:
-            break;
+            break
     }
 
     return Promise.reject(error)
@@ -73,9 +73,10 @@ const requests = {
 const Activities = {
     list: () => requests.get<Activity[]>('/activities'),
     details: (id: string) => requests.get<Activity>(`/activities/${id}`),
-    create: (activity: Activity) => axios.post('/activities', activity),
-    update: (activity: Activity) => axios.put(`/activities/${activity.id}`, activity),
-    delete: (id: string) => axios.delete(`/activities/${id}`)
+    create: (activity: ActivityFormValues) => requests.post('/activities', activity),
+    update: (activity: ActivityFormValues) => requests.put(`/activities/${activity.id}`, activity),
+    delete: (id: string) => requests.del(`/activities/${id}`),
+    attend: (id: string) => requests.post(`/activities/${id}/attend`, {})
 }
 
 const Account = {
@@ -89,4 +90,4 @@ const agent = {
     Account
 }
 
-export default agent;
+export default agent
