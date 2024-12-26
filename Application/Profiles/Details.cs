@@ -18,10 +18,11 @@ namespace Application.Profiles
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
+
             public Handler(DataContext context, IMapper mapper)
             {
-                _mapper = mapper;
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<Result<Profile>> Handle(Query request, CancellationToken cancellationToken)
@@ -29,7 +30,9 @@ namespace Application.Profiles
                 var user = await _context.Users
                     .ProjectTo<Profile>(_mapper.ConfigurationProvider)
                     .SingleOrDefaultAsync(x => x.Username == request.Username);
-                
+
+                if (user == null) return null;
+
                 return Result<Profile>.Success(user);
             }
         }
