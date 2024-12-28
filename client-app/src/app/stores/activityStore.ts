@@ -1,8 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx"
-import agent from "../api/agent"
-import { v4 as uuid } from 'uuid'
 import { Activity, ActivityFormValues } from "../models/activity"
-import { format } from "date-fns"
+import agent from "../api/agent"
 import { store } from "./store"
 import { Profile } from "../models/profile"
 
@@ -17,19 +15,19 @@ export default class ActivityStore {
         makeAutoObservable(this)
     }
 
-    get activitiesByDate() {
-        return Array.from(this.activityRegistry.values()).sort((a, b) =>
-            a.date!.getTime() - b.date!.getTime())
-    }
-
     get groupedActivities() {
         return Object.entries(
             this.activitiesByDate.reduce((activities, activity) => {
-                const date = format(activity.date!, 'dd MMM yyyy')
+                const date = activity.date!.toISOString().split('T')[0]
                 activities[date] = activities[date] ? [...activities[date], activity] : [activity]
                 return activities
             }, {} as { [key: string]: Activity[] })
         )
+    }
+
+    get activitiesByDate() {
+        return Array.from(this.activityRegistry.values()).sort((a, b) =>
+            a.date!.getTime() - b.date!.getTime())
     }
 
     loadActivities = async () => {
@@ -49,7 +47,7 @@ export default class ActivityStore {
     loadActivity = async (id: string) => {
         let activity = this.getActivity(id)
         if (activity) {
-            runInAction(() => this.selectedActivity = activity)
+            this.selectedActivity = activity
             return activity
         }
         else {
@@ -57,6 +55,7 @@ export default class ActivityStore {
             try {
                 activity = await agent.Activities.details(id)
                 this.setActivity(activity)
+                runInAction(() => this.selectedActivity = activity)
                 this.setLoadingInitial(false)
                 return activity
             } catch (error) {
@@ -64,10 +63,6 @@ export default class ActivityStore {
                 this.setLoadingInitial(false)
             }
         }
-    }
-
-    private getActivity = (id: string) => {
-        return this.activityRegistry.get(id)
     }
 
     private setActivity = (activity: Activity) => {
@@ -79,9 +74,12 @@ export default class ActivityStore {
             activity.isHost = activity.hostUsername === user.username
             activity.host = activity.attendees?.find(x => x.username === activity.hostUsername)
         }
-
         activity.date = new Date(activity.date!)
         this.activityRegistry.set(activity.id, activity)
+    }
+
+    private getActivity = (id: string) => {
+        return this.activityRegistry.get(id)
     }
 
     setLoadingInitial = (state: boolean) => {
@@ -89,18 +87,15 @@ export default class ActivityStore {
     }
 
     createActivity = async (activity: ActivityFormValues) => {
-        const user = store.userStore.user
-        const attendee = new Profile(user!)
-        activity.id = uuid()
+        const user = store.userStore!.user
+        const profile = new Profile(user!)
         try {
             await agent.Activities.create(activity)
             const newActivity = new Activity(activity)
             newActivity.hostUsername = user!.username
-            newActivity.attendees = [attendee]
+            newActivity.attendees = [profile]
             this.setActivity(newActivity)
-            runInAction(() => {
-                this.selectedActivity = newActivity
-            })
+            runInAction(() => this.selectedActivity = newActivity)
         } catch (error) {
             console.log(error)
         }
@@ -111,7 +106,7 @@ export default class ActivityStore {
             await agent.Activities.update(activity)
             runInAction(() => {
                 if (activity.id) {
-                    const updatedActivity = { ...this.getActivity(activity.id), ...activity }
+                    let updatedActivity = { ...this.getActivity(activity.id), ...activity }
                     this.activityRegistry.set(activity.id, updatedActivity as Activity)
                     this.selectedActivity = updatedActivity as Activity
                 }
@@ -137,16 +132,14 @@ export default class ActivityStore {
         }
     }
 
-    /// remove/add attendee based on if they are going to an event or not
-    updateAttendance = async () => {
+    updateAttendeance = async () => {
         const user = store.userStore.user
         this.loading = true
         try {
             await agent.Activities.attend(this.selectedActivity!.id)
             runInAction(() => {
                 if (this.selectedActivity?.isGoing) {
-                    this.selectedActivity.attendees =
-                        this.selectedActivity.attendees?.filter(a => a.username != user?.username)
+                    this.selectedActivity.attendees = this.selectedActivity.attendees?.filter(a => a.username !== user?.username)
                     this.selectedActivity.isGoing = false
                 } else {
                     const attendee = new Profile(user!)
@@ -177,4 +170,7 @@ export default class ActivityStore {
         }
     }
 
+    clearSelectedActivity = () => {
+        this.selectedActivity = undefined
+    }
 }
