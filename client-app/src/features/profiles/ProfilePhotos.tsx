@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { SyntheticEvent, useState } from "react";
-import { Card, Header, Tab, Image, Grid, Button, TabPane } from "semantic-ui-react";
+import { Card, Header, Image, Grid, Button, TabPane } from "semantic-ui-react";
 import PhotoUploadWidget from "../../app/common/imageUpload/PhotoUploadWidget";
 import { Photo, Profile } from "../../app/models/profile";
 import { useStore } from "../../app/stores/store";

@@ -35,7 +35,7 @@ export default class ActivityStore {
 
     setPredicate = (predicate: string, value: string | Date) => {
         const resetPredicate = () => {
-            this.predicate.forEach((value, key) => {
+            this.predicate.forEach((_, key) => {
                 if (key !== 'startDate') this.predicate.delete(key)
             })
         }
@@ -195,7 +195,7 @@ export default class ActivityStore {
         }
     }
 
-    updateAttendeance = async () => {
+    updateAttendance = async () => {
         const user = store.userStore.user
         this.loading = true
         try {

@@ -46,10 +46,10 @@ namespace Persistence
                     .HasForeignKey(o => o.ObserverId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                b.HasOne(o => o.Target)
+                b.HasOne(t => t.Target)
                 .WithMany(f => f.Followers)
-                .HasForeignKey(o => o.TargetId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(t => t.TargetId)
+                .OnDelete(DeleteBehavior.NoAction);
             });
         }
     }
