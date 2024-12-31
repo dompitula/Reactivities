@@ -64,7 +64,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                         <Button as={Link}
                             disabled={activity.isCancelled}
                             to={`/manage/${activity.id}`}
-                            color='orange'
+                            color='teal'
                             floated='right'>
                             Manage Event
                         </Button>

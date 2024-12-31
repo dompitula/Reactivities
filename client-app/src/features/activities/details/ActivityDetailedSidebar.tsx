@@ -28,7 +28,7 @@ export default observer(function ActivityDetailedSidebar({ activity: { attendees
                             {attendee.username === host?.username &&
                                 <Label
                                     style={{ position: 'absolute' }}
-                                    color='orange'
+                                    color='teal'
                                     ribbon='right'
                                 >
                                     Host
@@ -39,7 +39,7 @@ export default observer(function ActivityDetailedSidebar({ activity: { attendees
                                     <Link to={`/profiles/${attendee.username}`}>{attendee.displayName}</Link>
                                 </Item.Header>
                                 {attendee.following &&
-                                <Item.Extra style={{ color: 'orange' }}>Following</Item.Extra>}
+                                <Item.Extra style={{ color: 'teal' }}>Following</Item.Extra>}
                             </Item.Content>
                         </Item>
                     ))}

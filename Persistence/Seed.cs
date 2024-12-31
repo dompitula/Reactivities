@@ -14,21 +14,21 @@ namespace Persistence
                 {
                     new AppUser
                     {
-                        DisplayName = "Bob",
-                        UserName = "bob",
-                        Email = "bob@test.com"
+                        DisplayName = "Domino",
+                        UserName = "dom",
+                        Email = "dom@test.com"
                     },
                     new AppUser
                     {
-                        DisplayName = "Jane",
-                        UserName = "jane",
-                        Email = "jane@test.com"
+                        DisplayName = "Emma",
+                        UserName = "emma",
+                        Email = "emma@test.com"
                     },
                     new AppUser
                     {
-                        DisplayName = "Tom",
-                        UserName = "tom",
-                        Email = "tom@test.com"
+                        DisplayName = "Christopher",
+                        UserName = "chris",
+                        Email = "chris@test.com"
                     },
                 };
 
@@ -45,7 +45,7 @@ namespace Persistence
                         Date = DateTime.UtcNow.AddMonths(-2),
                         Description = "Activity 2 months ago",
                         Category = "drinks",
-                        City = "London",
+                        City = "Gdansk",
                         Venue = "Pub",
                         Attendees = new List<ActivityAttendee>
                         {
@@ -62,8 +62,8 @@ namespace Persistence
                         Date = DateTime.UtcNow.AddMonths(-1),
                         Description = "Activity 1 month ago",
                         Category = "culture",
-                        City = "Paris",
-                        Venue = "The Louvre",
+                        City = "Sopot",
+                        Venue = "Cool Venue",
                         Attendees = new List<ActivityAttendee>
                         {
                             new ActivityAttendee
@@ -84,8 +84,8 @@ namespace Persistence
                         Date = DateTime.UtcNow.AddMonths(1),
                         Description = "Activity 1 month in future",
                         Category = "music",
-                        City = "London",
-                        Venue = "Wembly Stadium",
+                        City = "Gdynia",
+                        Venue = "Polsat Arena",
                         Attendees = new List<ActivityAttendee>
                         {
                             new ActivityAttendee
